@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Color system from the project brief:
+  Light mode  -> background: Xanthous #F7B538, primary text: Burgundy #780116
+  Dark mode   -> background: Burgundy  #780116, primary text: Xanthous #F7B538
+
+  Values are stored as space-separated RGB channels (not hex) so that
+  tailwind.config.ts can wrap them as rgb(var(--x) / <alpha-value>) and
+  opacity modifiers like bg-primary/10 actually work. Tailwind v3's
+  opacity-modifier support requires this channel format for CSS-variable
+  colors -- the color-mix() approach that accepts raw hex only shipped in
+  Tailwind v4, which this project is not on (package.json pins ^3.4.14).
+
+  Font substitution note:
+  The brief listed typeface names (Mergola, WERO, Winked, Ganey, Kago, Harka,
+  GOBE, MoRHeFA, Kanesty, Hams Pro) that could not be verified as real,
+  licensed, or Google-Fonts-available typefaces. Sora (display) and Inter
+  (body) are used here as verified stand-ins. Swap once the intended fonts
+  are confirmed and licensed.
+*/
+
+:root {
+  --color-background: 247 181 56;   /* #F7B538 */
+  --color-foreground: 120 1 22;     /* #780116 */
+  --color-primary: 120 1 22;        /* #780116 */
+  --color-primary-foreground: 247 181 56; /* #F7B538 */
+  --color-secondary: 247 181 56;    /* #F7B538 */
+  --color-secondary-foreground: 120 1 22; /* #780116 */
+  --color-border: 120 1 22;         /* #780116 */
+  --color-panel: 255 255 255;       /* #FFFFFF */
+
+  --font-display: "Sora", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+.dark {
+  --color-background: 120 1 22;       /* #780116 */
+  --color-foreground: 247 181 56;     /* #F7B538 */
+  --color-primary: 247 181 56;        /* #F7B538 */
+  --color-primary-foreground: 120 1 22; /* #780116 */
+  --color-secondary: 120 1 22;        /* #780116 */
+  --color-secondary-foreground: 247 181 56; /* #F7B538 */
+  --color-border: 247 181 56;         /* #F7B538 */
+  --color-panel: 140 6 25;            /* #8C0619 */
+}
+
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-body);
+}

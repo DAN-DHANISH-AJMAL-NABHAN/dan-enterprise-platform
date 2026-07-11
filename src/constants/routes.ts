@@ -1,0 +1,40 @@
+export const ROUTES = {
+  // Public
+  HOME: "/",
+  ABOUT: "/about-us",
+  SERVICES: "/services",
+  SOLUTIONS: "/solutions",
+  PORTFOLIO: "/portfolio",
+  PROJECT_DETAIL: "/portfolio/:slug",
+  TECHNOLOGIES: "/technologies",
+  INDUSTRIES: "/industries",
+  TESTIMONIALS: "/testimonials",
+  CONTACT: "/contact-us",
+  CAREERS: "/careers",
+  JOB_DETAIL: "/careers/:slug",
+  QUOTE: "/get-a-quote",
+  CONSULTATION: "/book-consultation",
+  FAQ: "/faq",
+  PRIVACY: "/privacy-policy",
+  TERMS: "/terms-and-conditions",
+
+  // Auth
+  LOGIN: "/login",
+
+  // Admin
+  ADMIN_DASHBOARD: "/admin/dashboard",
+  ADMIN_SERVICES: "/admin/services",
+  ADMIN_SOLUTIONS: "/admin/solutions",
+  ADMIN_INDUSTRIES: "/admin/industries",
+  ADMIN_PORTFOLIO: "/admin/portfolio",
+  ADMIN_TECHNOLOGIES: "/admin/technologies",
+  ADMIN_QUOTES: "/admin/quotes",
+  ADMIN_APPOINTMENTS: "/admin/appointments",
+  ADMIN_CAREERS: "/admin/careers",
+  ADMIN_TESTIMONIALS: "/admin/testimonials",
+  ADMIN_MEDIA: "/admin/media",
+  ADMIN_CONTACT: "/admin/contact",
+  ADMIN_ANALYTICS: "/admin/analytics",
+  ADMIN_SEO: "/admin/seo",
+  ADMIN_SETTINGS: "/admin/settings",
+} as const;
