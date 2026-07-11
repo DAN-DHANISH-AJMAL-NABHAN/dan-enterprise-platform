@@ -1,6 +1,5 @@
 <<<<<<< HEAD
-# Enterprise Software Platform — Scaffold
-
+# DAN Enterprise Software Platform
 This is a **structural scaffold**, not a finished application. It gives you a working
 folder architecture, routing skeleton, Appwrite service layer, and a proposed database
 schema so the real page-by-page build can start from a consistent foundation.
