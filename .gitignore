@@ -36,6 +36,7 @@ pnpm-debug.log*
 
 # Appwrite CLI local state (if you use `appwrite init`)
 .appwrite/
+appwrite/
 
 # Coverage / test artifacts
 coverage/
