@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Enterprise Software Platform — Scaffold
 
 This is a **structural scaffold**, not a finished application. It gives you a working
@@ -89,3 +90,6 @@ src/
 appwrite/
   schema.json     proposed collection/attribute definitions
 ```
+=======
+# dan-enterprise-platform
+>>>>>>> 7358a74a946685c79f0f6bfd0f055b408326d9a0
