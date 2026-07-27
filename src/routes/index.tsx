@@ -1,8 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
+import { AdminAuthBoundary } from "@/routes/AdminAuthBoundary";
 
 import { HomePage } from "@/pages/public/HomePage";
 import { AboutPage } from "@/pages/public/AboutPage";
@@ -60,31 +61,43 @@ export const router = createBrowserRouter([
       { path: ROUTES.FAQ, element: <FaqPage /> },
       { path: ROUTES.PRIVACY, element: <PrivacyPage /> },
       { path: ROUTES.TERMS, element: <TermsPage /> },
-      { path: ROUTES.LOGIN, element: <LoginPage /> },
+      {
+        element: <AdminAuthBoundary />,
+        children: [{ path: ROUTES.LOGIN, element: <LoginPage /> }],
+      },
     ],
   },
   {
-    element: (
-      <ProtectedRoute>
-        <AdminLayout />
-      </ProtectedRoute>
-    ),
+    element: <AdminAuthBoundary />,
     children: [
-      { path: ROUTES.ADMIN_DASHBOARD, element: <DashboardPage /> },
-      { path: ROUTES.ADMIN_SERVICES, element: <ServiceManagementPage /> },
-      { path: ROUTES.ADMIN_SOLUTIONS, element: <SolutionManagementPage /> },
-      { path: ROUTES.ADMIN_INDUSTRIES, element: <IndustryManagementPage /> },
-      { path: ROUTES.ADMIN_PORTFOLIO, element: <PortfolioManagementPage /> },
-      { path: ROUTES.ADMIN_TECHNOLOGIES, element: <TechnologyManagementPage /> },
-      { path: ROUTES.ADMIN_QUOTES, element: <QuoteManagementPage /> },
-      { path: ROUTES.ADMIN_APPOINTMENTS, element: <AppointmentManagementPage /> },
-      { path: ROUTES.ADMIN_CAREERS, element: <CareerManagementPage /> },
-      { path: ROUTES.ADMIN_TESTIMONIALS, element: <TestimonialManagementPage /> },
-      { path: ROUTES.ADMIN_MEDIA, element: <MediaLibraryPage /> },
-      { path: ROUTES.ADMIN_CONTACT, element: <ContactManagementPage /> },
-      { path: ROUTES.ADMIN_ANALYTICS, element: <AnalyticsPage /> },
-      { path: ROUTES.ADMIN_SEO, element: <SeoManagementPage /> },
-      { path: ROUTES.ADMIN_SETTINGS, element: <SettingsPage /> },
+      {
+        path: "/admin",
+        element: <Navigate to={ROUTES.ADMIN_DASHBOARD} replace />,
+      },
+      {
+        element: (
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        ),
+        children: [
+          { path: ROUTES.ADMIN_DASHBOARD, element: <DashboardPage /> },
+          { path: ROUTES.ADMIN_SERVICES, element: <ServiceManagementPage /> },
+          { path: ROUTES.ADMIN_SOLUTIONS, element: <SolutionManagementPage /> },
+          { path: ROUTES.ADMIN_INDUSTRIES, element: <IndustryManagementPage /> },
+          { path: ROUTES.ADMIN_PORTFOLIO, element: <PortfolioManagementPage /> },
+          { path: ROUTES.ADMIN_TECHNOLOGIES, element: <TechnologyManagementPage /> },
+          { path: ROUTES.ADMIN_QUOTES, element: <QuoteManagementPage /> },
+          { path: ROUTES.ADMIN_APPOINTMENTS, element: <AppointmentManagementPage /> },
+          { path: ROUTES.ADMIN_CAREERS, element: <CareerManagementPage /> },
+          { path: ROUTES.ADMIN_TESTIMONIALS, element: <TestimonialManagementPage /> },
+          { path: ROUTES.ADMIN_MEDIA, element: <MediaLibraryPage /> },
+          { path: ROUTES.ADMIN_CONTACT, element: <ContactManagementPage /> },
+          { path: ROUTES.ADMIN_ANALYTICS, element: <AnalyticsPage /> },
+          { path: ROUTES.ADMIN_SEO, element: <SeoManagementPage /> },
+          { path: ROUTES.ADMIN_SETTINGS, element: <SettingsPage /> },
+        ],
+      },
     ],
   },
 ]);
