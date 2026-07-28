@@ -1,6 +1,27 @@
 {
-  "_note": "This is a proposed schema for a new Appwrite database, written by hand to match the project brief. It has not been created in or verified against a live Appwrite project. Review attribute sizes/types and apply via the Appwrite CLI (appwrite deploy collection) or manually in the console before use.",
+  "_note": "Enterprise admin portal Appwrite schema. Apply with Appwrite Console/CLI or convert to deployment scripts. All CMS collections include soft-delete fields used by the admin CRUD engine.",
   "databaseId": "enterprise_platform",
+  "storageBuckets": [
+    {
+      "id": "media",
+      "name": "Media Library",
+      "fileSecurity": true,
+      "maximumFileSize": 52428800,
+      "allowedFileExtensions": ["jpg", "jpeg", "png", "webp", "gif", "svg", "mp4", "webm", "pdf", "doc", "docx", "xls", "xlsx", "csv", "zip"],
+      "permissions": ["read(\"any\")", "create(\"users\")", "update(\"users\")", "delete(\"users\")"]
+    }
+  ],
+  "commonAttributes": [
+    { "key": "slug", "type": "string", "size": 160, "required": false },
+    { "key": "status", "type": "string", "size": 32, "required": false, "default": "draft" },
+    { "key": "sortOrder", "type": "integer", "required": false, "default": 0 },
+    { "key": "featured", "type": "boolean", "required": false, "default": false },
+    { "key": "seoTitle", "type": "string", "size": 255, "required": false },
+    { "key": "seoDescription", "type": "string", "size": 1000, "required": false },
+    { "key": "seoKeywords", "type": "string", "size": 128, "array": true, "required": false },
+    { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+    { "key": "deletedAt", "type": "datetime", "required": false }
+  ],
   "collections": [
     {
       "id": "company",
@@ -10,13 +31,39 @@
         { "key": "tagline", "type": "string", "size": 255, "required": false },
         { "key": "logoMediaId", "type": "string", "size": 64, "required": false },
         { "key": "faviconMediaId", "type": "string", "size": 64, "required": false },
-        { "key": "foundedYear", "type": "integer", "required": false },
-        { "key": "mission", "type": "string", "size": 2000, "required": false },
-        { "key": "vision", "type": "string", "size": 2000, "required": false },
-        { "key": "values", "type": "string", "size": 2000, "required": false, "array": true },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" },
-        { "key": "seo", "type": "string", "size": 4000, "required": false }
+        { "key": "email", "type": "email", "required": false },
+        { "key": "phone", "type": "string", "size": 48, "required": false },
+        { "key": "address", "type": "string", "size": 1000, "required": false },
+        { "key": "mission", "type": "string", "size": 5000, "required": false },
+        { "key": "vision", "type": "string", "size": 5000, "required": false },
+        { "key": "socialLinks", "type": "string", "size": 4000, "required": false }
+      ]
+    },
+    {
+      "id": "homepage",
+      "name": "Homepage",
+      "attributes": [
+        { "key": "section", "type": "string", "size": 64, "required": true },
+        { "key": "title", "type": "string", "size": 255, "required": true },
+        { "key": "subtitle", "type": "string", "size": 255, "required": false },
+        { "key": "description", "type": "string", "size": 10000, "required": false },
+        { "key": "buttonLabel", "type": "string", "size": 128, "required": false },
+        { "key": "buttonUrl", "type": "url", "required": false },
+        { "key": "backgroundMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "heroImageId", "type": "string", "size": 64, "required": false },
+        { "key": "statistics", "type": "string", "size": 8000, "required": false }
+      ]
+    },
+    {
+      "id": "about",
+      "name": "About Us",
+      "attributes": [
+        { "key": "section", "type": "string", "size": 64, "required": true },
+        { "key": "title", "type": "string", "size": 255, "required": true },
+        { "key": "content", "type": "string", "size": 15000, "required": false },
+        { "key": "mediaId", "type": "string", "size": 64, "required": false },
+        { "key": "year", "type": "integer", "required": false },
+        { "key": "linkUrl", "type": "url", "required": false }
       ]
     },
     {
@@ -25,51 +72,35 @@
       "attributes": [
         { "key": "name", "type": "string", "size": 255, "required": true },
         { "key": "category", "type": "string", "size": 128, "required": true },
-        { "key": "shortDescription", "type": "string", "size": 500, "required": true },
-        { "key": "description", "type": "string", "size": 5000, "required": true },
-        { "key": "iconMediaId", "type": "string", "size": 64, "required": false },
-        { "key": "featured", "type": "boolean", "required": false, "default": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" },
-        { "key": "seo", "type": "string", "size": 4000, "required": false }
+        { "key": "shortDescription", "type": "string", "size": 700, "required": true },
+        { "key": "description", "type": "string", "size": 15000, "required": true },
+        { "key": "features", "type": "string", "size": 255, "array": true, "required": false },
+        { "key": "pricing", "type": "string", "size": 255, "required": false },
+        { "key": "imageMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "iconMediaId", "type": "string", "size": 64, "required": false }
       ],
-      "indexes": [{ "key": "slug_unique", "type": "unique", "attributes": ["slug"] }]
-    },
-    {
-      "id": "pricing",
-      "name": "Pricing",
-      "attributes": [
-        { "key": "planName", "type": "string", "size": 128, "required": true },
-        { "key": "tier", "type": "string", "size": 32, "required": true },
-        { "key": "price", "type": "double", "required": false },
-        { "key": "billingCycle", "type": "string", "size": 32, "required": false },
-        { "key": "features", "type": "string", "size": 500, "array": true, "required": false },
-        { "key": "serviceId", "type": "string", "size": 64, "required": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" }
-      ]
+      "indexes": [{ "key": "services_slug_unique", "type": "unique", "attributes": ["slug"] }]
     },
     {
       "id": "solutions",
       "name": "Solutions",
       "attributes": [
         { "key": "name", "type": "string", "size": 255, "required": true },
+        { "key": "category", "type": "string", "size": 128, "required": false },
+        { "key": "description", "type": "string", "size": 12000, "required": true },
         { "key": "industryIds", "type": "string", "size": 64, "array": true, "required": false },
-        { "key": "description", "type": "string", "size": 3000, "required": true },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" },
-        { "key": "seo", "type": "string", "size": 4000, "required": false }
+        { "key": "serviceIds", "type": "string", "size": 64, "array": true, "required": false },
+        { "key": "imageMediaId", "type": "string", "size": 64, "required": false }
       ]
     },
     {
       "id": "industries",
       "name": "Industries",
       "attributes": [
-        { "key": "name", "type": "string", "size": 128, "required": true },
+        { "key": "name", "type": "string", "size": 255, "required": true },
+        { "key": "description", "type": "string", "size": 10000, "required": false },
         { "key": "iconMediaId", "type": "string", "size": 64, "required": false },
-        { "key": "description", "type": "string", "size": 2000, "required": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" }
+        { "key": "imageMediaId", "type": "string", "size": 64, "required": false }
       ]
     },
     {
@@ -78,35 +109,266 @@
       "attributes": [
         { "key": "title", "type": "string", "size": 255, "required": true },
         { "key": "summary", "type": "string", "size": 1000, "required": true },
-        { "key": "clientId", "type": "string", "size": 64, "required": false },
-        { "key": "industryIds", "type": "string", "size": 64, "array": true, "required": false },
-        { "key": "technologyIds", "type": "string", "size": 64, "array": true, "required": false },
-        { "key": "liveUrl", "type": "string", "size": 512, "required": false },
+        { "key": "description", "type": "string", "size": 15000, "required": false },
+        { "key": "clientName", "type": "string", "size": 255, "required": false },
+        { "key": "location", "type": "string", "size": 255, "required": false },
+        { "key": "technologies", "type": "string", "size": 128, "array": true, "required": false },
+        { "key": "timeline", "type": "string", "size": 255, "required": false },
+        { "key": "galleryMediaIds", "type": "string", "size": 64, "array": true, "required": false },
         { "key": "coverImageId", "type": "string", "size": 64, "required": false },
-        { "key": "rating", "type": "double", "required": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" },
-        { "key": "seo", "type": "string", "size": 4000, "required": false }
+        { "key": "liveUrl", "type": "url", "required": false }
       ],
-      "indexes": [{ "key": "slug_unique", "type": "unique", "attributes": ["slug"] }]
+      "indexes": [{ "key": "projects_slug_unique", "type": "unique", "attributes": ["slug"] }]
     },
     {
-      "id": "project_images",
-      "name": "Project Images",
+      "id": "products",
+      "name": "Products",
       "attributes": [
-        { "key": "projectId", "type": "string", "size": 64, "required": true },
-        { "key": "mediaId", "type": "string", "size": 64, "required": true },
-        { "key": "caption", "type": "string", "size": 255, "required": false },
-        { "key": "sortOrder", "type": "integer", "required": false, "default": 0 }
+        { "key": "name", "type": "string", "size": 255, "required": true },
+        { "key": "sku", "type": "string", "size": 128, "required": false },
+        { "key": "category", "type": "string", "size": 128, "required": false },
+        { "key": "description", "type": "string", "size": 15000, "required": false },
+        { "key": "specifications", "type": "string", "size": 8000, "required": false },
+        { "key": "downloadMediaIds", "type": "string", "size": 64, "array": true, "required": false },
+        { "key": "imageMediaIds", "type": "string", "size": 64, "array": true, "required": false },
+        { "key": "price", "type": "double", "required": false },
+        { "key": "inventory", "type": "integer", "required": false, "default": 0 }
       ]
     },
     {
-      "id": "project_videos",
-      "name": "Project Videos",
+      "id": "portfolio",
+      "name": "Portfolio",
       "attributes": [
-        { "key": "projectId", "type": "string", "size": 64, "required": true },
-        { "key": "mediaId", "type": "string", "size": 64, "required": true },
-        { "key": "title", "type": "string", "size": 255, "required": false }
+        { "key": "title", "type": "string", "size": 255, "required": true },
+        { "key": "category", "type": "string", "size": 128, "required": false },
+        { "key": "description", "type": "string", "size": 12000, "required": false },
+        { "key": "tags", "type": "string", "size": 128, "array": true, "required": false },
+        { "key": "galleryMediaIds", "type": "string", "size": 64, "array": true, "required": false },
+        { "key": "videoMediaIds", "type": "string", "size": 64, "array": true, "required": false },
+        { "key": "coverImageId", "type": "string", "size": 64, "required": false }
+      ]
+    },
+    {
+      "id": "team_members",
+      "name": "Team Members",
+      "attributes": [
+        { "key": "name", "type": "string", "size": 255, "required": true },
+        { "key": "designation", "type": "string", "size": 255, "required": true },
+        { "key": "department", "type": "string", "size": 128, "required": false },
+        { "key": "experienceYears", "type": "integer", "required": false },
+        { "key": "bio", "type": "string", "size": 10000, "required": false },
+        { "key": "photoMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "socialLinks", "type": "string", "size": 4000, "required": false }
+      ]
+    },
+    {
+      "id": "jobs",
+      "name": "Jobs",
+      "attributes": [
+        { "key": "title", "type": "string", "size": 255, "required": true },
+        { "key": "department", "type": "string", "size": 128, "required": true },
+        { "key": "skills", "type": "string", "size": 128, "array": true, "required": false },
+        { "key": "salaryRange", "type": "string", "size": 128, "required": false },
+        { "key": "location", "type": "string", "size": 128, "required": true },
+        { "key": "experience", "type": "string", "size": 128, "required": false },
+        { "key": "employmentType", "type": "string", "size": 32, "required": true },
+        { "key": "description", "type": "string", "size": 15000, "required": true }
+      ]
+    },
+    {
+      "id": "applications",
+      "name": "Applications",
+      "attributes": [
+        { "key": "jobId", "type": "string", "size": 64, "required": true },
+        { "key": "jobTitle", "type": "string", "size": 255, "required": false },
+        { "key": "applicantName", "type": "string", "size": 255, "required": true },
+        { "key": "applicantEmail", "type": "email", "required": true },
+        { "key": "applicantPhone", "type": "string", "size": 48, "required": false },
+        { "key": "resumeMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "coverNote", "type": "string", "size": 4000, "required": false },
+        { "key": "status", "type": "string", "size": 32, "required": true, "default": "new" },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "blogs",
+      "name": "Blog",
+      "attributes": [
+        { "key": "title", "type": "string", "size": 255, "required": true },
+        { "key": "excerpt", "type": "string", "size": 1000, "required": false },
+        { "key": "content", "type": "string", "size": 50000, "required": true },
+        { "key": "category", "type": "string", "size": 128, "required": false },
+        { "key": "tags", "type": "string", "size": 128, "array": true, "required": false },
+        { "key": "author", "type": "string", "size": 255, "required": false },
+        { "key": "thumbnailMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "publishDate", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "testimonials",
+      "name": "Testimonials",
+      "attributes": [
+        { "key": "clientName", "type": "string", "size": 255, "required": true },
+        { "key": "clientCompany", "type": "string", "size": 255, "required": false },
+        { "key": "quote", "type": "string", "size": 2000, "required": true },
+        { "key": "rating", "type": "integer", "required": true, "min": 1, "max": 5 },
+        { "key": "avatarMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "videoMediaId", "type": "string", "size": 64, "required": false }
+      ]
+    },
+    {
+      "id": "clients",
+      "name": "Clients",
+      "attributes": [
+        { "key": "name", "type": "string", "size": 255, "required": true },
+        { "key": "logoMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "websiteUrl", "type": "url", "required": false },
+        { "key": "description", "type": "string", "size": 4000, "required": false }
+      ]
+    },
+    {
+      "id": "gallery",
+      "name": "Gallery",
+      "attributes": [
+        { "key": "title", "type": "string", "size": 255, "required": true },
+        { "key": "type", "type": "string", "size": 32, "required": true },
+        { "key": "mediaId", "type": "string", "size": 64, "required": false },
+        { "key": "album", "type": "string", "size": 128, "required": false },
+        { "key": "category", "type": "string", "size": 128, "required": false },
+        { "key": "caption", "type": "string", "size": 1000, "required": false }
+      ]
+    },
+    {
+      "id": "contact_requests",
+      "name": "Contact Requests",
+      "attributes": [
+        { "key": "name", "type": "string", "size": 255, "required": true },
+        { "key": "email", "type": "email", "required": true },
+        { "key": "phone", "type": "string", "size": 48, "required": false },
+        { "key": "subject", "type": "string", "size": 255, "required": false },
+        { "key": "message", "type": "string", "size": 6000, "required": true },
+        { "key": "replyNote", "type": "string", "size": 4000, "required": false },
+        { "key": "status", "type": "string", "size": 32, "required": true, "default": "new" },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "newsletter_subscribers",
+      "name": "Newsletter Subscribers",
+      "attributes": [
+        { "key": "email", "type": "email", "required": true },
+        { "key": "name", "type": "string", "size": 255, "required": false },
+        { "key": "source", "type": "string", "size": 128, "required": false },
+        { "key": "status", "type": "string", "size": 32, "required": true, "default": "subscribed" },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ],
+      "indexes": [{ "key": "newsletter_email_unique", "type": "unique", "attributes": ["email"] }]
+    },
+    {
+      "id": "faqs",
+      "name": "FAQs",
+      "attributes": [
+        { "key": "question", "type": "string", "size": 500, "required": true },
+        { "key": "answer", "type": "string", "size": 10000, "required": true },
+        { "key": "category", "type": "string", "size": 128, "required": false }
+      ]
+    },
+    {
+      "id": "policies",
+      "name": "Policies",
+      "attributes": [
+        { "key": "type", "type": "string", "size": 64, "required": true },
+        { "key": "title", "type": "string", "size": 255, "required": true },
+        { "key": "content", "type": "string", "size": 50000, "required": true },
+        { "key": "effectiveDate", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "settings",
+      "name": "Website Settings",
+      "attributes": [
+        { "key": "group", "type": "string", "size": 64, "required": true },
+        { "key": "key", "type": "string", "size": 160, "required": true },
+        { "key": "value", "type": "string", "size": 20000, "required": true },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ],
+      "indexes": [{ "key": "settings_key_unique", "type": "unique", "attributes": ["key"] }]
+    },
+    {
+      "id": "menus",
+      "name": "Menus",
+      "attributes": [
+        { "key": "menu", "type": "string", "size": 64, "required": true },
+        { "key": "label", "type": "string", "size": 128, "required": true },
+        { "key": "path", "type": "string", "size": 255, "required": true },
+        { "key": "parentId", "type": "string", "size": 64, "required": false },
+        { "key": "sortOrder", "type": "integer", "required": false, "default": 0 },
+        { "key": "status", "type": "string", "size": 32, "required": true, "default": "published" },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "media",
+      "name": "Media Library",
+      "attributes": [
+        { "key": "fileId", "type": "string", "size": 64, "required": true },
+        { "key": "fileName", "type": "string", "size": 255, "required": true },
+        { "key": "fileType", "type": "string", "size": 64, "required": true },
+        { "key": "folder", "type": "string", "size": 128, "required": false },
+        { "key": "altText", "type": "string", "size": 255, "required": false },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "admin_users",
+      "name": "Admin Users",
+      "attributes": [
+        { "key": "name", "type": "string", "size": 255, "required": true },
+        { "key": "email", "type": "email", "required": true },
+        { "key": "role", "type": "string", "size": 64, "required": true },
+        { "key": "permissions", "type": "string", "size": 128, "array": true, "required": false },
+        { "key": "status", "type": "string", "size": 32, "required": true, "default": "active" },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ],
+      "indexes": [{ "key": "admin_users_email_unique", "type": "unique", "attributes": ["email"] }]
+    },
+    {
+      "id": "quotes",
+      "name": "Enquiries",
+      "attributes": [
+        { "key": "projectType", "type": "string", "size": 128, "required": true },
+        { "key": "budgetRange", "type": "string", "size": 64, "required": true },
+        { "key": "timeline", "type": "string", "size": 64, "required": true },
+        { "key": "requirements", "type": "string", "size": 6000, "required": true },
+        { "key": "contactName", "type": "string", "size": 255, "required": true },
+        { "key": "contactEmail", "type": "email", "required": true },
+        { "key": "contactPhone", "type": "string", "size": 48, "required": false },
+        { "key": "status", "type": "string", "size": 32, "required": true, "default": "new" },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "appointments",
+      "name": "Appointments",
+      "attributes": [
+        { "key": "contactName", "type": "string", "size": 255, "required": true },
+        { "key": "contactEmail", "type": "email", "required": true },
+        { "key": "meetingType", "type": "string", "size": 32, "required": true },
+        { "key": "scheduledAt", "type": "datetime", "required": true },
+        { "key": "durationMinutes", "type": "integer", "required": true, "default": 30 },
+        { "key": "googleMeetLink", "type": "url", "required": false },
+        { "key": "notes", "type": "string", "size": 4000, "required": false },
+        { "key": "status", "type": "string", "size": 32, "required": true, "default": "pending" },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
       ]
     },
     {
@@ -116,151 +378,22 @@
         { "key": "name", "type": "string", "size": 128, "required": true },
         { "key": "category", "type": "string", "size": 64, "required": true },
         { "key": "iconMediaId", "type": "string", "size": 64, "required": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" }
+        { "key": "description", "type": "string", "size": 2000, "required": false }
       ]
     },
     {
-      "id": "clients",
-      "name": "Clients",
+      "id": "seo",
+      "name": "SEO",
       "attributes": [
-        { "key": "name", "type": "string", "size": 255, "required": true },
-        { "key": "logoMediaId", "type": "string", "size": 64, "required": false },
-        { "key": "websiteUrl", "type": "string", "size": 512, "required": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" }
-      ]
-    },
-    {
-      "id": "testimonials",
-      "name": "Testimonials",
-      "attributes": [
-        { "key": "clientName", "type": "string", "size": 255, "required": true },
-        { "key": "clientCompany", "type": "string", "size": 255, "required": false },
-        { "key": "quote", "type": "string", "size": 1000, "required": true },
-        { "key": "rating", "type": "integer", "required": true, "min": 1, "max": 5 },
-        { "key": "avatarMediaId", "type": "string", "size": 64, "required": false },
-        { "key": "videoMediaId", "type": "string", "size": 64, "required": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" }
-      ]
-    },
-    {
-      "id": "reviews",
-      "name": "Reviews",
-      "attributes": [
-        { "key": "projectId", "type": "string", "size": 64, "required": false },
-        { "key": "reviewerName", "type": "string", "size": 255, "required": true },
-        { "key": "rating", "type": "integer", "required": true, "min": 1, "max": 5 },
-        { "key": "comment", "type": "string", "size": 1000, "required": false },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" }
-      ]
-    },
-    {
-      "id": "faqs",
-      "name": "FAQs",
-      "attributes": [
-        { "key": "question", "type": "string", "size": 500, "required": true },
-        { "key": "answer", "type": "string", "size": 3000, "required": true },
-        { "key": "category", "type": "string", "size": 128, "required": false },
-        { "key": "sortOrder", "type": "integer", "required": false, "default": 0 },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" }
-      ]
-    },
-    {
-      "id": "jobs",
-      "name": "Jobs",
-      "attributes": [
+        { "key": "page", "type": "string", "size": 255, "required": true },
         { "key": "title", "type": "string", "size": 255, "required": true },
-        { "key": "department", "type": "string", "size": 128, "required": true },
-        { "key": "location", "type": "string", "size": 128, "required": true },
-        { "key": "employmentType", "type": "string", "size": 32, "required": true },
-        { "key": "description", "type": "string", "size": 5000, "required": true },
-        { "key": "slug", "type": "string", "size": 128, "required": true },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "draft" },
-        { "key": "seo", "type": "string", "size": 4000, "required": false }
-      ]
-    },
-    {
-      "id": "applications",
-      "name": "Applications",
-      "attributes": [
-        { "key": "jobId", "type": "string", "size": 64, "required": true },
-        { "key": "applicantName", "type": "string", "size": 255, "required": true },
-        { "key": "applicantEmail", "type": "string", "size": 255, "required": true },
-        { "key": "applicantPhone", "type": "string", "size": 32, "required": false },
-        { "key": "resumeMediaId", "type": "string", "size": 64, "required": true },
-        { "key": "coverNote", "type": "string", "size": 2000, "required": false },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "new" }
-      ]
-    },
-    {
-      "id": "quotes",
-      "name": "Quotes",
-      "attributes": [
-        { "key": "projectType", "type": "string", "size": 128, "required": true },
-        { "key": "budgetRange", "type": "string", "size": 64, "required": true },
-        { "key": "timeline", "type": "string", "size": 64, "required": true },
-        { "key": "requirements", "type": "string", "size": 3000, "required": true },
-        { "key": "attachmentMediaIds", "type": "string", "size": 64, "array": true, "required": false },
-        { "key": "contactName", "type": "string", "size": 255, "required": true },
-        { "key": "contactEmail", "type": "string", "size": 255, "required": true },
-        { "key": "contactPhone", "type": "string", "size": 32, "required": false },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "new" }
-      ]
-    },
-    {
-      "id": "appointments",
-      "name": "Appointments",
-      "attributes": [
-        { "key": "contactName", "type": "string", "size": 255, "required": true },
-        { "key": "contactEmail", "type": "string", "size": 255, "required": true },
-        { "key": "meetingType", "type": "string", "size": 32, "required": true },
-        { "key": "scheduledAt", "type": "datetime", "required": true },
-        { "key": "durationMinutes", "type": "integer", "required": true, "default": 30 },
-        { "key": "googleMeetLink", "type": "string", "size": 512, "required": false },
-        { "key": "notes", "type": "string", "size": 1000, "required": false },
-        { "key": "status", "type": "string", "size": 16, "required": true, "default": "pending" }
-      ]
-    },
-    {
-      "id": "media",
-      "name": "Media",
-      "attributes": [
-        { "key": "fileId", "type": "string", "size": 64, "required": true },
-        { "key": "fileName", "type": "string", "size": 255, "required": true },
-        { "key": "fileType", "type": "string", "size": 32, "required": true },
-        { "key": "folder", "type": "string", "size": 128, "required": false },
-        { "key": "altText", "type": "string", "size": 255, "required": false }
-      ]
-    },
-    {
-      "id": "settings",
-      "name": "Settings",
-      "attributes": [
-        { "key": "key", "type": "string", "size": 128, "required": true },
-        { "key": "value", "type": "string", "size": 4000, "required": true }
-      ],
-      "indexes": [{ "key": "key_unique", "type": "unique", "attributes": ["key"] }]
-    },
-    {
-      "id": "navigation",
-      "name": "Navigation",
-      "attributes": [
-        { "key": "label", "type": "string", "size": 128, "required": true },
-        { "key": "path", "type": "string", "size": 255, "required": true },
-        { "key": "parentId", "type": "string", "size": 64, "required": false },
-        { "key": "sortOrder", "type": "integer", "required": false, "default": 0 }
-      ]
-    },
-    {
-      "id": "footer",
-      "name": "Footer",
-      "attributes": [
-        { "key": "columnTitle", "type": "string", "size": 128, "required": true },
-        { "key": "links", "type": "string", "size": 2000, "required": false }
+        { "key": "description", "type": "string", "size": 1000, "required": false },
+        { "key": "keywords", "type": "string", "size": 128, "array": true, "required": false },
+        { "key": "canonicalUrl", "type": "url", "required": false },
+        { "key": "ogImageMediaId", "type": "string", "size": 64, "required": false },
+        { "key": "robots", "type": "string", "size": 128, "required": false },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
       ]
     },
     {
@@ -269,9 +402,44 @@
       "attributes": [
         { "key": "eventType", "type": "string", "size": 64, "required": true },
         { "key": "path", "type": "string", "size": 255, "required": false },
-        { "key": "metadata", "type": "string", "size": 2000, "required": false },
-        { "key": "occurredAt", "type": "datetime", "required": true }
+        { "key": "metadata", "type": "string", "size": 8000, "required": false },
+        { "key": "occurredAt", "type": "datetime", "required": true },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "audit_logs",
+      "name": "Audit Logs",
+      "attributes": [
+        { "key": "actorName", "type": "string", "size": 255, "required": true },
+        { "key": "actorEmail", "type": "email", "required": false },
+        { "key": "action", "type": "string", "size": 128, "required": true },
+        { "key": "entityType", "type": "string", "size": 128, "required": false },
+        { "key": "entityId", "type": "string", "size": 64, "required": false },
+        { "key": "changes", "type": "string", "size": 20000, "required": false },
+        { "key": "isDeleted", "type": "boolean", "required": false, "default": false },
+        { "key": "deletedAt", "type": "datetime", "required": false }
+      ]
+    },
+    {
+      "id": "login_history",
+      "name": "Login History",
+      "attributes": [
+        { "key": "userId", "type": "string", "size": 64, "required": true },
+        { "key": "email", "type": "email", "required": false },
+        { "key": "ipAddress", "type": "ip", "required": false },
+        { "key": "userAgent", "type": "string", "size": 1000, "required": false },
+        { "key": "loggedInAt", "type": "datetime", "required": true }
       ]
     }
-  ]
+  ],
+  "collectionDefaults": {
+    "permissions": ["read(\"any\")", "create(\"users\")", "update(\"users\")", "delete(\"users\")"],
+    "indexes": [
+      { "key": "status_idx", "type": "key", "attributes": ["status"] },
+      { "key": "deleted_idx", "type": "key", "attributes": ["isDeleted"] },
+      { "key": "sort_idx", "type": "key", "attributes": ["sortOrder"] }
+    ]
+  }
 }
