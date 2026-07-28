@@ -7,7 +7,6 @@ export const COLLECTIONS = {
   COMPANY: "company",
   HOME: "home",
   ABOUT: "about",
-  HOMEPAGE: "homepage",
   SERVICES: "services",
   PRICING: "pricing",
   SOLUTIONS: "solutions",

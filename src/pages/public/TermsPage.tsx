@@ -1,10 +1,6 @@
+import { CmsPage } from "@/components/public/CmsPage";
+import { publicPageConfigs } from "@/modules/public/publicPages";
+
 export function TermsPage() {
-  return (
-    <section className="mx-auto max-w-6xl px-4 py-16">
-      <h1 className="font-display text-3xl font-semibold">Terms</h1>
-      <p className="mt-2 text-sm opacity-70">
-        Stub page — wire up to the appropriate Appwrite collection(s) and replace this placeholder.
-      </p>
-    </section>
-  );
+  return <CmsPage config={publicPageConfigs.terms} />;
 }

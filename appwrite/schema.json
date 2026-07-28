@@ -40,7 +40,7 @@
       ]
     },
     {
-      "id": "homepage",
+      "id": "home",
       "name": "Homepage",
       "attributes": [
         { "key": "section", "type": "string", "size": 64, "required": true },

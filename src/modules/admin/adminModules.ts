@@ -100,7 +100,7 @@ export const adminModules: AdminModuleConfig[] = [
     singular: "Homepage Section",
     description: "Hero, statistics, banners, CTAs, and homepage content blocks.",
     route: ROUTES.ADMIN_HOMEPAGE,
-    collectionId: COLLECTIONS.HOMEPAGE,
+    collectionId: COLLECTIONS.HOME,
     icon: Home,
     group: "CMS",
     searchFields: ["title", "subtitle", "section"],

@@ -26,19 +26,6 @@ function buildQueries(options: ListDocumentsOptions = {}) {
   queries.push(Query.limit(pageSize));
   queries.push(Query.offset(offset));
 
-  if (!options.includeDeleted) {
-    queries.push(Query.notEqual("isDeleted", true));
-  }
-
-  if (options.search && options.searchAttributes?.length) {
-    const value = options.search.trim();
-    if (value) {
-      for (const attribute of options.searchAttributes) {
-        queries.push(Query.search(attribute, value));
-      }
-    }
-  }
-
   if (options.sortBy) {
     queries.push(
       options.sortDirection === "asc" ? Query.orderAsc(options.sortBy) : Query.orderDesc(options.sortBy),
@@ -63,9 +50,20 @@ export function createRepository<T extends { $id: string }>(collectionId: Collec
 
     async listPaginated(options: ListDocumentsOptions = {}): Promise<PaginatedDocuments<T>> {
       const res = await databases.listDocuments(DATABASE_ID, collectionId, buildQueries(options));
+      const searchValue = options.search?.trim().toLowerCase();
+      const documents = (res.documents as unknown as T[]).filter((document) => {
+        const record = document as Record<string, unknown>;
+        if (!options.includeDeleted && record.isDeleted === true) return false;
+        if (!searchValue || !options.searchAttributes?.length) return true;
+        return options.searchAttributes.some((attribute) =>
+          String(record[attribute] ?? "")
+            .toLowerCase()
+            .includes(searchValue),
+        );
+      });
       return {
-        documents: res.documents as unknown as T[],
-        total: res.total,
+        documents,
+        total: searchValue || !options.includeDeleted ? documents.length : res.total,
       };
     },
 
